@@ -375,14 +375,28 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
         print('MEMGATOR checking {0}'.format(currentURIValue))
+
+
+        platform_close_fds = False
+        platform_stdout = PIPE
+        # Fixes issue of Popen on Windows
+        if sys.platform.startswith('win32'):
+            platform_close_fds = True
+            platform_stdout = None
+
+
         mg = Popen([memGatorPath,
                             '--arcs', archivesJSON,
                             '--format', 'cdxj',
                             '--restimeout', '0m3s',
                             '--hdrtimeout', '3s',
                             '--contimeout', '3s',
-                            currentURIValue], stdout=PIPE)
-        
+                            currentURIValue], stdout=platform_stdout,
+                            close_fds=platform_close_fds)
+
+
+
+
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
 
