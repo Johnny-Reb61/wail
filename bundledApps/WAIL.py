@@ -379,11 +379,11 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         platform_close_fds = False
         platform_stdout = PIPE
+        platform_stderr = subprocess.STDOUT
         # Fixes issue of Popen on Windows
         if sys.platform.startswith('win32'):
             platform_close_fds = True
             platform_stdout = None
-
 
         mg = Popen([memGatorPath,
                             '--arcs', archivesJSON,
@@ -391,8 +391,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                             '--restimeout', '0m3s',
                             '--hdrtimeout', '3s',
                             '--contimeout', '3s',
-                            currentURIValue], stdout=platform_stdout,
-                            close_fds=platform_close_fds)
+                            currentURIValue], stdout=platform_stdout,stderr=platform_stderr,close_fds=platform_close_fds)
 
 
 
